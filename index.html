@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>おうち巡礼 サポート</title>
+  <meta name="description" content="おうち巡礼のサポート、スクリーンショット、Q&amp;A、プライバシーポリシー。">
+  <style>
+    :root {
+      --paper: #f0eee6;
+      --paper-raised: #faf5eb;
+      --paper-deep: #e8e0d1;
+      --ink: #292621;
+      --ink-soft: #594f45;
+      --ink-muted: #8a8073;
+      --shuiro: #b8402e;
+      --matsuba: #3b4d3b;
+      --line: rgba(41, 38, 33, 0.22);
+      --shadow: 0 18px 48px rgba(41, 38, 33, 0.12);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+      line-height: 1.75;
+      letter-spacing: 0;
+    }
+
+    a {
+      color: var(--shuiro);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 4px;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid var(--line);
+      background: rgba(240, 238, 230, 0.92);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 14px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand-title {
+      font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+      font-size: 24px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .brand-subtitle {
+      color: var(--ink-muted);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 10px 18px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .hero {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 72px 0 46px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.06fr) minmax(280px, 0.72fr);
+      gap: 46px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      color: var(--shuiro);
+      font-size: 14px;
+      font-weight: 800;
+      margin: 0 0 10px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      font-size: clamp(42px, 7vw, 78px);
+      margin: 0;
+    }
+
+    h2 {
+      font-size: clamp(30px, 4vw, 46px);
+      margin: 0 0 22px;
+    }
+
+    h3 {
+      font-size: 22px;
+      margin: 0 0 8px;
+    }
+
+    .lead {
+      color: var(--ink-soft);
+      font-size: clamp(18px, 2.1vw, 22px);
+      margin: 22px 0 0;
+      max-width: 690px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 2px solid var(--shuiro);
+      color: var(--shuiro);
+      background: var(--paper-raised);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .button.primary {
+      color: #fff;
+      background: var(--shuiro);
+    }
+
+    .phone-frame {
+      max-width: 360px;
+      margin-left: auto;
+      padding: 12px;
+      border-radius: 30px;
+      background: var(--ink);
+      box-shadow: var(--shadow);
+    }
+
+    .phone-frame img {
+      border-radius: 22px;
+      background: var(--paper-raised);
+    }
+
+    section {
+      border-top: 1px solid var(--line);
+      padding: 56px 0;
+    }
+
+    .section-inner {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper-raised);
+      padding: 22px;
+    }
+
+    .card p,
+    .policy-block p,
+    .qa-item p {
+      color: var(--ink-soft);
+      margin: 0;
+    }
+
+    .screenshots {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+      align-items: start;
+    }
+
+    .screenshot-item {
+      margin: 0;
+    }
+
+    .screenshot-item img {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      background: var(--paper-raised);
+    }
+
+    .screenshot-item figcaption {
+      color: var(--ink-muted);
+      font-size: 14px;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .qa-list,
+    .policy-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .qa-item,
+    .policy-block {
+      border-left: 4px solid var(--shuiro);
+      border-radius: var(--radius);
+      background: var(--paper-raised);
+      padding: 20px 22px;
+    }
+
+    .note {
+      color: var(--ink-muted);
+      font-size: 14px;
+      margin-top: 18px;
+    }
+
+    .support-box {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 20px;
+      align-items: center;
+      border: 2px solid var(--matsuba);
+      border-radius: var(--radius);
+      background: var(--paper-raised);
+      padding: 26px;
+    }
+
+    .support-box p {
+      color: var(--ink-soft);
+      margin: 0;
+    }
+
+    .contact-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .contact-list li {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: baseline;
+    }
+
+    .contact-label {
+      color: var(--ink);
+      font-weight: 800;
+      min-width: 96px;
+    }
+
+    .site-footer {
+      color: var(--ink-muted);
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 28px 0 48px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding-top: 46px;
+      }
+
+      .phone-frame {
+        margin: 0;
+        max-width: 320px;
+      }
+
+      .feature-grid,
+      .qa-list,
+      .policy-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .screenshots {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .support-box {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .nav {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .brand {
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .nav-links {
+        justify-content: flex-start;
+      }
+
+      .screenshots {
+        grid-template-columns: 1fr;
+      }
+
+      .phone-frame {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="ページ内メニュー">
+      <div class="brand">
+        <span class="brand-title">おうち巡礼</span>
+        <span class="brand-subtitle">巡礼気分でウォーキング</span>
+      </div>
+      <div class="nav-links">
+        <a href="#screenshots">画面</a>
+        <a href="#qa">Q&amp;A</a>
+        <a href="#privacy">プライバシー</a>
+        <a href="#support">お問い合わせ</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="hero">
+      <div>
+        <p class="eyebrow">iOS歩数計アプリ</p>
+        <h1>おうち巡礼</h1>
+        <p class="lead">毎日の歩数を、巡礼路を進む距離に置き換えて楽しむアプリです。実際の現在地を追跡せず、ヘルスケアの歩数から仮想の進み具合を表示します。</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#privacy">プライバシーポリシー</a>
+          <a class="button" href="#support">サポートを見る</a>
+        </div>
+      </div>
+      <div class="phone-frame" aria-label="おうち巡礼のメイン画面">
+        <img src="app-store-screenshots/iphone14-main.png" alt="おうち巡礼のメイン画面スクリーンショット">
+      </div>
+    </div>
+
+    <section aria-labelledby="about-title">
+      <div class="section-inner">
+        <h2 id="about-title">アプリ概要</h2>
+        <div class="feature-grid">
+          <article class="card">
+            <h3>歩くだけで進みます</h3>
+            <p>Appleヘルスケアの歩数を使い、今日の歩きとこれまでの距離を自動で反映します。</p>
+          </article>
+          <article class="card">
+            <h3>巡礼路を選べます</h3>
+            <p>四国八十八箇所、熊野古道、サンティアゴ巡礼路から選び、途中で別コースに切り替えることもできます。</p>
+          </article>
+          <article class="card">
+            <h3>到達記録を残せます</h3>
+            <p>通過済みのチェックポイントは実績として残り、場所の紹介をあとから見返せます。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="screenshots" aria-labelledby="screenshots-title">
+      <div class="section-inner">
+        <h2 id="screenshots-title">スクリーンショット</h2>
+        <div class="screenshots">
+          <figure class="screenshot-item">
+            <img src="app-store-screenshots/iphone14-main.png" alt="メイン画面">
+            <figcaption>メイン画面</figcaption>
+          </figure>
+          <figure class="screenshot-item">
+            <img src="app-store-screenshots/iphone17-pro-max-main.png" alt="大きい画面でのメイン画面">
+            <figcaption>大きい画面</figcaption>
+          </figure>
+          <figure class="screenshot-item">
+            <img src="app-store-screenshots/iphone17-pro-max-course-history.png" alt="コース履歴画面">
+            <figcaption>コース履歴</figcaption>
+          </figure>
+          <figure class="screenshot-item">
+            <img src="app-store-screenshots/iphone17-pro-max-checkpoint-detail.png" alt="チェックポイント詳細画面">
+            <figcaption>チェックポイント詳細</figcaption>
+          </figure>
+        </div>
+        <p class="note">画面内容は提出前の最終ビルドで再確認します。</p>
+      </div>
+    </section>
+
+    <section id="qa" aria-labelledby="qa-title">
+      <div class="section-inner">
+        <h2 id="qa-title">Q&amp;A</h2>
+        <div class="qa-list">
+          <article class="qa-item">
+            <h3>実際の現在地を使いますか？</h3>
+            <p>使いません。位置情報で追跡するアプリではなく、歩数から換算した仮想の進み具合として表示します。</p>
+          </article>
+          <article class="qa-item">
+            <h3>歩数データは外部に送られますか？</h3>
+            <p>送信しません。歩数、進捗、履歴は端末内に保存され、アプリ内の表示にのみ使用します。</p>
+          </article>
+          <article class="qa-item">
+            <h3>ヘルスケアへの書き込みはありますか？</h3>
+            <p>ありません。おうち巡礼は、許可された歩数データの読み取りだけを行います。</p>
+          </article>
+          <article class="qa-item">
+            <h3>途中でコースを変えられますか？</h3>
+            <p>変えられます。各コースの進み具合は保存されるため、前回の中断地点から再開できます。</p>
+          </article>
+          <article class="qa-item">
+            <h3>データをリセットできますか？</h3>
+            <p>できます。現在のコースだけをリセットする方法と、すべてのコース選択と進捗をリセットする方法があります。</p>
+          </article>
+          <article class="qa-item">
+            <h3>Google Mapsはどう使いますか？</h3>
+            <p>チェックポイント詳細から、ユーザー操作で外部のGoogle Mapsを開くことがあります。アプリ内で現在地を追跡するものではありません。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="privacy" aria-labelledby="privacy-title">
+      <div class="section-inner">
+        <h2 id="privacy-title">プライバシーポリシー</h2>
+        <p class="note">最終更新日: 2026-04-29</p>
+        <div class="policy-grid">
+          <article class="policy-block">
+            <h3>取得する情報</h3>
+            <p>ユーザーが許可した場合に限り、Appleヘルスケアから今日の歩数と、アプリで進捗計算に使う期間の歩数を読み取ります。ヘルスケアへデータを書き込みません。</p>
+          </article>
+          <article class="policy-block">
+            <h3>利用目的</h3>
+            <p>歩数データは、巡礼コース上の進み具合、今日の歩数、これまで歩いた距離、残り距離、到達済みチェックポイントの表示にのみ利用します。</p>
+          </article>
+          <article class="policy-block">
+            <h3>外部送信</h3>
+            <p>歩数、コース履歴、チェックポイント到達状況は外部サーバーへ送信しません。これらの情報はユーザーの端末内に保存されます。</p>
+          </article>
+          <article class="policy-block">
+            <h3>第三者提供とトラッキング</h3>
+            <p>ユーザーの歩数や利用状況を第三者へ提供しません。また、広告目的のトラッキングを行いません。</p>
+          </article>
+          <article class="policy-block">
+            <h3>外部リンク</h3>
+            <p>チェックポイント詳細からGoogle Mapsなどの外部サービスを開く場合があります。外部サービス利用時の情報の取り扱いは、各サービスのポリシーに従います。</p>
+          </article>
+          <article class="policy-block">
+            <h3>データの削除</h3>
+            <p>アプリ内の設定から、現在のコースの進捗、またはすべてのコース選択と進捗データをリセットできます。アプリ削除時も端末内の本アプリデータは削除されます。</p>
+          </article>
+          <article class="policy-block">
+            <h3>お問い合わせ</h3>
+            <p>プライバシーに関するお問い合わせは、本ページ下部のメール窓口までお願いします。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="support" aria-labelledby="support-title">
+      <div class="section-inner">
+        <h2 id="support-title">お問い合わせ</h2>
+        <div class="support-box">
+          <p>不具合、表示内容の確認、コースやチェックポイント情報についてのご連絡は、下記の窓口までお願いします。</p>
+          <ul class="contact-list">
+            <li>
+              <span class="contact-label">メール</span>
+              <a href="mailto:Hiro@ozbright-tech.com">Hiro@ozbright-tech.com</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <small>&copy; 2026 おうち巡礼 @ OzBright</small>
+  </footer>
+</body>
+</html>
