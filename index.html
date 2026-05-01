@@ -2,404 +2,771 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>おうち巡礼 サポート</title>
   <meta name="description" content="おうち巡礼のサポート、スクリーンショット、Q&amp;A、プライバシーポリシー。">
+  <meta name="theme-color" content="#f0eee6">
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
   <style>
     :root {
-      --paper: #f0eee6;
-      --paper-raised: #faf5eb;
+      /* color tokens — 朱色ベース、和紙風 */
+      --paper: #f3efe5;
+      --paper-raised: #fbf6ec;
       --paper-deep: #e8e0d1;
-      --ink: #292621;
-      --ink-soft: #594f45;
-      --ink-muted: #8a8073;
-      --shuiro: #b8402e;
-      --matsuba: #3b4d3b;
-      --line: rgba(41, 38, 33, 0.22);
-      --shadow: 0 18px 48px rgba(41, 38, 33, 0.12);
-      --radius: 8px;
+      --ink: #25221d;
+      --ink-soft: #4f463c;
+      --ink-muted: #80766a;
+      --accent: #b8402e;          /* 朱色 (default) */
+      --accent-soft: #c95a47;
+      --accent-tint: rgba(184, 64, 46, 0.08);
+      --line: rgba(37, 34, 29, 0.14);
+      --line-strong: rgba(37, 34, 29, 0.22);
+      --shadow-sm: 0 2px 8px rgba(37, 34, 29, 0.06);
+      --shadow-md: 0 8px 24px rgba(37, 34, 29, 0.08);
+      --shadow-lg: 0 24px 56px rgba(37, 34, 29, 0.12);
+
+      /* size tokens — シニア向け 標準より少し大きめ */
+      --fs-body: 18px;
+      --fs-small: 15px;
+      --fs-lead: 19px;
+      --radius-sm: 12px;
+      --radius: 18px;
+      --radius-lg: 28px;
+
+      /* decoration density */
+      --deco: 1;
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
       color: var(--ink);
       background: var(--paper);
-      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
-      line-height: 1.75;
-      letter-spacing: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Noto Sans JP", Meiryo, sans-serif;
+      font-size: var(--fs-body);
+      line-height: 1.85;
+      letter-spacing: 0.01em;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
     }
 
     a {
-      color: var(--shuiro);
+      color: var(--accent);
       text-decoration-thickness: 1px;
       text-underline-offset: 4px;
     }
 
-    img {
-      display: block;
-      max-width: 100%;
+    img { display: block; max-width: 100%; }
+
+    .container {
+      width: min(1080px, calc(100% - 32px));
+      margin-inline: auto;
     }
 
+    /* ───── Header ───── */
     .site-header {
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 20;
       border-bottom: 1px solid var(--line);
-      background: rgba(240, 238, 230, 0.92);
-      backdrop-filter: blur(18px);
+      background: color-mix(in srgb, var(--paper) 85%, transparent);
+      backdrop-filter: saturate(140%) blur(16px);
+      -webkit-backdrop-filter: saturate(140%) blur(16px);
     }
 
     .nav {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 18px;
-      width: min(1120px, calc(100% - 40px));
-      margin: 0 auto;
+      gap: 12px;
       padding: 14px 0;
     }
 
     .brand {
       display: flex;
-      align-items: baseline;
-      gap: 10px;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      text-decoration: none;
+      color: var(--ink);
+    }
+
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--paper-raised);
+      display: grid;
+      place-items: center;
+      font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+      font-size: 22px;
+      font-weight: 600;
+      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.05) inset;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.15;
       min-width: 0;
     }
 
     .brand-title {
       font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
-      font-size: 24px;
-      font-weight: 800;
-      white-space: nowrap;
+      font-size: 21px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
     }
 
     .brand-subtitle {
       color: var(--ink-muted);
-      font-size: 14px;
-      white-space: nowrap;
+      font-size: 12px;
+      margin-top: 2px;
     }
 
     .nav-links {
-      display: flex;
+      display: none;
       flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 10px 18px;
-      font-size: 14px;
-      font-weight: 700;
+      gap: 8px 22px;
+      font-size: 15px;
+      font-weight: 600;
     }
 
+    .nav-links a {
+      text-decoration: none;
+      color: var(--ink-soft);
+      padding: 6px 4px;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    @media (min-width: 760px) {
+      .nav-links { display: flex; }
+    }
+
+    /* ───── Hero ───── */
     .hero {
-      width: min(1120px, calc(100% - 40px));
-      margin: 0 auto;
-      padding: 72px 0 46px;
+      padding: 36px 0 28px;
       display: grid;
-      grid-template-columns: minmax(0, 1.06fr) minmax(280px, 0.72fr);
-      gap: 46px;
+      grid-template-columns: 1fr;
+      gap: 28px;
       align-items: center;
     }
 
-    .eyebrow {
-      color: var(--shuiro);
-      font-size: 14px;
-      font-weight: 800;
-      margin: 0 0 10px;
+    @media (min-width: 880px) {
+      .hero {
+        grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.9fr);
+        gap: 56px;
+        padding: 72px 0 56px;
+      }
     }
 
-    h1,
-    h2,
-    h3 {
-      font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
-      line-height: 1.25;
-      letter-spacing: 0;
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      margin: 0 0 14px;
+      padding: 6px 14px;
+      background: var(--accent-tint);
+      border-radius: 999px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    h1, h2, h3 {
+      font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+      line-height: 1.3;
+      letter-spacing: 0.01em;
+      color: var(--ink);
+      text-wrap: pretty;
     }
 
     h1 {
-      font-size: clamp(42px, 7vw, 78px);
+      font-size: clamp(38px, 8.5vw, 64px);
       margin: 0;
+      font-weight: 700;
     }
 
     h2 {
-      font-size: clamp(30px, 4vw, 46px);
-      margin: 0 0 22px;
+      font-size: clamp(26px, 4.6vw, 36px);
+      margin: 0 0 24px;
+      font-weight: 700;
     }
 
     h3 {
-      font-size: 22px;
+      font-size: 19px;
       margin: 0 0 8px;
+      font-weight: 700;
     }
 
     .lead {
       color: var(--ink-soft);
-      font-size: clamp(18px, 2.1vw, 22px);
+      font-size: clamp(17px, 2vw, var(--fs-lead));
       margin: 22px 0 0;
-      max-width: 690px;
+      max-width: 640px;
     }
 
     .hero-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      margin-top: 30px;
+      margin-top: 28px;
     }
 
     .button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 48px;
-      padding: 10px 18px;
+      gap: 10px;
+      min-height: 56px;
+      padding: 12px 24px;
       border-radius: 999px;
-      border: 2px solid var(--shuiro);
-      color: var(--shuiro);
+      border: 2px solid transparent;
+      color: var(--accent);
       background: var(--paper-raised);
-      font-weight: 800;
+      font: inherit;
+      font-weight: 700;
+      font-size: 17px;
       text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.18s ease, background 0.18s ease;
+      box-shadow: var(--shadow-sm);
     }
+
+    .button:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+    .button:active { transform: translateY(0); }
 
     .button.primary {
       color: #fff;
-      background: var(--shuiro);
+      background: var(--accent);
+      border-color: var(--accent);
+      box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 28%, transparent);
     }
 
+    .button.primary:hover {
+      background: color-mix(in srgb, var(--accent) 92%, #000);
+    }
+
+    .button.ghost {
+      background: transparent;
+      border-color: var(--line-strong);
+      color: var(--ink);
+    }
+
+    .button .icon {
+      width: 22px; height: 22px;
+      flex: 0 0 auto;
+      fill: currentColor;
+    }
+
+    /* phone preview */
     .phone-frame {
-      max-width: 360px;
-      margin-left: auto;
-      padding: 12px;
-      border-radius: 30px;
+      max-width: 320px;
+      margin: 0 auto;
+      padding: 10px;
+      border-radius: 38px;
       background: var(--ink);
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow-lg);
+      position: relative;
+    }
+
+    .phone-frame::before {
+      content: "";
+      position: absolute;
+      top: 18px; left: 50%;
+      transform: translateX(-50%);
+      width: 100px; height: 26px;
+      background: #000;
+      border-radius: 999px;
+      z-index: 2;
+      opacity: calc(0.35 * var(--deco));
     }
 
     .phone-frame img {
-      border-radius: 22px;
+      border-radius: 28px;
       background: var(--paper-raised);
+      aspect-ratio: 9 / 19.5;
+      object-fit: cover;
     }
 
+    .phone-frame .ph-placeholder {
+      border-radius: 28px;
+      background: linear-gradient(165deg, var(--paper-raised), var(--paper-deep));
+      aspect-ratio: 9 / 19.5;
+      display: grid;
+      place-items: center;
+      color: var(--ink-muted);
+      font-size: 13px;
+    }
+
+    /* ───── Sections ───── */
     section {
+      padding: 48px 0;
       border-top: 1px solid var(--line);
-      padding: 56px 0;
     }
 
-    .section-inner {
-      width: min(1120px, calc(100% - 40px));
-      margin: 0 auto;
+    @media (min-width: 760px) {
+      section { padding: 72px 0; }
     }
 
+    .section-eyebrow {
+      display: block;
+      color: var(--ink-muted);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    /* ───── Feature cards ───── */
     .feature-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    @media (min-width: 760px) {
+      .feature-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
     }
 
     .card {
       border: 1px solid var(--line);
       border-radius: var(--radius);
       background: var(--paper-raised);
-      padding: 22px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
-    .card p,
-    .policy-block p,
-    .qa-item p {
+    .card .card-icon {
+      width: 44px; height: 44px;
+      border-radius: 14px;
+      background: var(--accent-tint);
+      color: var(--accent);
+      display: grid;
+      place-items: center;
+      margin-bottom: 6px;
+    }
+
+    .card .card-icon svg { width: 24px; height: 24px; fill: currentColor; }
+
+    .card p {
       color: var(--ink-soft);
       margin: 0;
+      font-size: 16px;
+      line-height: 1.8;
     }
 
-    .screenshots {
+    /* ───── Screenshots carousel ───── */
+    .screenshots-carousel {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 18px;
-      align-items: start;
+      grid-auto-flow: column;
+      grid-auto-columns: 78%;
+      gap: 16px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: 16px;
+      padding: 4px 16px 24px;
+      margin-inline: -16px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .screenshots-carousel::-webkit-scrollbar { display: none; }
+
+    @media (min-width: 600px) {
+      .screenshots-carousel { grid-auto-columns: 46%; }
+    }
+    @media (min-width: 980px) {
+      .screenshots-carousel { grid-auto-columns: 28%; }
     }
 
     .screenshot-item {
       margin: 0;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .screenshot-item .shot-wrap {
+      padding: 8px;
+      border-radius: 32px;
+      background: var(--ink);
+      box-shadow: var(--shadow-md);
     }
 
     .screenshot-item img {
-      border: 1px solid var(--line);
+      width: 100%;
       border-radius: 24px;
-      box-shadow: var(--shadow);
       background: var(--paper-raised);
+      aspect-ratio: 9 / 19.5;
+      object-fit: cover;
+    }
+
+    .screenshot-item .shot-placeholder {
+      width: 100%;
+      border-radius: 24px;
+      aspect-ratio: 9 / 19.5;
+      background:
+        repeating-linear-gradient(135deg, rgba(255,255,255,0.04) 0 14px, rgba(255,255,255,0) 14px 28px),
+        linear-gradient(160deg, var(--paper-raised), var(--paper-deep));
+      display: grid;
+      place-items: center;
+      color: var(--ink-muted);
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      font-size: 13px;
+      text-align: center;
+      padding: 20px;
     }
 
     .screenshot-item figcaption {
-      color: var(--ink-muted);
-      font-size: 14px;
-      margin-top: 10px;
+      color: var(--ink-soft);
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 16px;
       text-align: center;
     }
 
-    .qa-list,
-    .policy-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
+    .carousel-hint {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--ink-muted);
+      font-size: 14px;
+      margin: 8px 0 16px;
+    }
+    .carousel-hint svg { width: 18px; height: 18px; fill: currentColor; }
+
+    /* Carousel controls (arrows + dots) */
+    .carousel-wrap {
+      position: relative;
     }
 
-    .qa-item,
-    .policy-block {
-      border-left: 4px solid var(--shuiro);
+    .carousel-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    .carousel-btn {
+      width: 48px;
+      height: 48px;
+      flex: 0 0 auto;
+      border-radius: 999px;
+      border: 1px solid var(--line-strong);
+      background: var(--paper-raised);
+      color: var(--ink);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.18s ease, background 0.18s ease, opacity 0.18s ease;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .carousel-btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+      background: var(--paper);
+    }
+
+    .carousel-btn:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+
+    .carousel-btn svg {
+      width: 22px;
+      height: 22px;
+      fill: currentColor;
+    }
+
+    .carousel-dots {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 0 4px;
+    }
+
+    .carousel-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--line-strong);
+      border: 0;
+      padding: 0;
+      cursor: pointer;
+      transition: background 0.18s ease, transform 0.18s ease, width 0.2s ease;
+    }
+
+    .carousel-dot[aria-current="true"] {
+      background: var(--accent);
+      width: 26px;
+    }
+
+    @media (min-width: 980px) {
+      .carousel-hint { display: none; }
+    }
+
+    /* ───── Q&A ───── */
+    .qa-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    @media (min-width: 760px) {
+      .qa-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    }
+
+    .qa-item {
+      border: 1px solid var(--line);
       border-radius: var(--radius);
       background: var(--paper-raised);
-      padding: 20px 22px;
+      padding: 22px 24px;
+    }
+
+    .qa-item h3 {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      font-size: 18px;
+    }
+
+    .qa-item h3::before {
+      content: "Q";
+      flex: 0 0 auto;
+      color: var(--accent);
+      font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+      font-weight: 700;
+      font-size: 22px;
+      line-height: 1;
+      padding-top: 2px;
+    }
+
+    .qa-item p {
+      color: var(--ink-soft);
+      margin: 6px 0 0;
+      padding-left: 26px;
+      position: relative;
+      font-size: 16px;
+    }
+
+    .qa-item p::before {
+      content: "A";
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: var(--ink-muted);
+      font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    /* ───── Privacy ───── */
+    .policy-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    @media (min-width: 760px) {
+      .policy-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    }
+
+    .policy-block {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper-raised);
+      padding: 22px 24px;
+    }
+
+    .policy-block p {
+      color: var(--ink-soft);
+      margin: 0;
+      font-size: 16px;
     }
 
     .note {
       color: var(--ink-muted);
       font-size: 14px;
-      margin-top: 18px;
+      margin-top: 14px;
     }
 
+    /* ───── Support ───── */
     .support-box {
+      border-radius: var(--radius-lg);
+      background: linear-gradient(160deg, var(--paper-raised), var(--paper-deep));
+      padding: 32px 28px;
       display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      gap: 20px;
-      align-items: center;
-      border: 2px solid var(--matsuba);
-      border-radius: var(--radius);
-      background: var(--paper-raised);
-      padding: 26px;
+      gap: 22px;
+      border: 1px solid var(--line);
+    }
+
+    @media (min-width: 760px) {
+      .support-box { padding: 40px 44px; }
     }
 
     .support-box p {
       color: var(--ink-soft);
       margin: 0;
+      font-size: 17px;
     }
 
-    .contact-list {
-      display: grid;
-      gap: 10px;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .contact-list li {
+    .contact-card {
       display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: baseline;
-    }
-
-    .contact-label {
+      align-items: center;
+      gap: 14px;
+      padding: 16px 18px;
+      background: var(--paper);
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      text-decoration: none;
       color: var(--ink);
-      font-weight: 800;
-      min-width: 96px;
+      font-weight: 600;
+      transition: transform 0.12s ease, box-shadow 0.18s ease;
+      min-height: 64px;
     }
 
-    .site-footer {
+    .contact-card:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+
+    .contact-card .ico {
+      width: 44px; height: 44px;
+      flex: 0 0 auto;
+      border-radius: 12px;
+      background: var(--accent-tint);
+      color: var(--accent);
+      display: grid;
+      place-items: center;
+    }
+    .contact-card .ico svg { width: 22px; height: 22px; fill: currentColor; }
+
+    .contact-card .label {
+      display: block;
       color: var(--ink-muted);
-      width: min(1120px, calc(100% - 40px));
-      margin: 0 auto;
-      padding: 28px 0 48px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .contact-card .value {
+      display: block;
+      color: var(--ink);
+      font-size: 16px;
+      word-break: break-all;
+    }
+
+    /* ───── Footer ───── */
+    .site-footer {
+      padding: 28px 0 56px;
+      color: var(--ink-muted);
       font-size: 14px;
+      text-align: center;
+      border-top: 1px solid var(--line);
+      margin-top: 12px;
     }
 
-    @media (max-width: 900px) {
-      .hero {
-        grid-template-columns: 1fr;
-        padding-top: 46px;
-      }
+    /* ───── Decoration toggle ───── */
+    /* When --deco = 0, suppress soft accents */
+    [data-deco="off"] .eyebrow { background: transparent; padding-left: 0; padding-right: 0; }
+    [data-deco="off"] .card .card-icon,
+    [data-deco="off"] .contact-card .ico { background: transparent; border: 1px solid var(--line); }
+    [data-deco="off"] .qa-item h3::before { color: var(--ink-muted); }
+    [data-deco="off"] .support-box { background: var(--paper-raised); }
+    [data-deco="off"] .button.primary { box-shadow: var(--shadow-sm); }
 
-      .phone-frame {
-        margin: 0;
-        max-width: 320px;
-      }
-
-      .feature-grid,
-      .qa-list,
-      .policy-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .screenshots {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .support-box {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 620px) {
-      .nav {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .brand {
-        flex-direction: column;
-        gap: 0;
-      }
-
-      .nav-links {
-        justify-content: flex-start;
-      }
-
-      .screenshots {
-        grid-template-columns: 1fr;
-      }
-
-      .phone-frame {
-        max-width: 100%;
-      }
+    /* Focus styles for accessibility */
+    a:focus-visible, .button:focus-visible, .contact-card:focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--accent) 60%, transparent);
+      outline-offset: 3px;
     }
   </style>
 </head>
 <body>
   <header class="site-header">
-    <nav class="nav" aria-label="ページ内メニュー">
-      <div class="brand">
-        <span class="brand-title">おうち巡礼</span>
-        <span class="brand-subtitle">巡礼気分でウォーキング</span>
-      </div>
-      <div class="nav-links">
-        <a href="#screenshots">画面</a>
-        <a href="#qa">Q&amp;A</a>
-        <a href="#privacy">プライバシー</a>
-        <a href="#support">お問い合わせ</a>
-      </div>
-    </nav>
+    <div class="container">
+      <nav class="nav" aria-label="ページ内メニュー">
+        <a class="brand" href="#top">
+          <span class="brand-mark" aria-hidden="true">巡</span>
+          <span class="brand-text">
+            <span class="brand-title">おうち巡礼</span>
+            <span class="brand-subtitle">巡礼気分でウォーキング</span>
+          </span>
+        </a>
+        <div class="nav-links">
+          <a href="#about">アプリ概要</a>
+          <a href="#screenshots">画面</a>
+          <a href="#qa">Q&amp;A</a>
+          <a href="#privacy">プライバシー</a>
+          <a href="#support">お問い合わせ</a>
+        </div>
+      </nav>
+    </div>
   </header>
 
-  <main>
-    <div class="hero">
-      <div>
-        <p class="eyebrow">iOS歩数計アプリ</p>
-        <h1>おうち巡礼</h1>
-        <p class="lead">毎日の歩数を、巡礼路を進む距離に置き換えて楽しむアプリです。実際の現在地を追跡せず、ヘルスケアの歩数から仮想の進み具合を表示します。</p>
-        <div class="hero-actions">
-          <a class="button primary" href="#privacy">プライバシーポリシー</a>
-          <a class="button" href="#support">サポートを見る</a>
+  <main id="top">
+    <div class="container">
+      <div class="hero">
+        <div>
+          <p class="eyebrow">iOS歩数計アプリ</p>
+          <h1>おうち巡礼</h1>
+          <p class="lead">毎日の歩数を、巡礼路を進む距離に置き換えて楽しむアプリです。実際の現在地は使わず、ヘルスケアの歩数から仮想の進み具合を表示します。</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#" aria-label="App Storeでダウンロード">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.4 12.6c0-2.6 2.1-3.8 2.2-3.9-1.2-1.7-3-2-3.7-2-1.6-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.9-1.7 0-3.3 1-4.2 2.5-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3 0 1.8-.8 3.3-.8s2 .8 3.3.8c1.4 0 2.3-1.3 3.1-2.5.7-1 1.1-2 1.5-3-.1 0-2.9-1.1-2.9-3.9zM14 4.7c.7-.8 1.1-2 1-3.2-1 .1-2.2.7-2.9 1.5-.7.7-1.2 1.9-1.1 3 1.1.1 2.3-.5 3-1.3z"/></svg>
+              App Storeで入手
+            </a>
+            <a class="button ghost" href="#support">サポートを見る</a>
+          </div>
         </div>
-      </div>
-      <div class="phone-frame" aria-label="おうち巡礼のメイン画面">
-        <img src="app-store-screenshots/iphone14-main.png" alt="おうち巡礼のメイン画面スクリーンショット">
+        <div class="phone-frame" aria-label="おうち巡礼のメイン画面">
+          <img src="app-store-screenshots/iphone14-main.png" alt="おうち巡礼のメイン画面"
+               onerror="this.outerHTML='&lt;div class=&quot;ph-placeholder&quot;&gt;メイン画面プレビュー&lt;/div&gt;'">
+        </div>
       </div>
     </div>
 
-    <section aria-labelledby="about-title">
-      <div class="section-inner">
+    <section id="about" aria-labelledby="about-title">
+      <div class="container">
+        <span class="section-eyebrow">About</span>
         <h2 id="about-title">アプリ概要</h2>
         <div class="feature-grid">
           <article class="card">
+            <div class="card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3C14.8 12 16.8 13 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1L6 8.3V13h2V9.6l1.8-.7z"/></svg>
+            </div>
             <h3>歩くだけで進みます</h3>
             <p>Appleヘルスケアの歩数を使い、今日の歩きとこれまでの距離を自動で反映します。</p>
           </article>
           <article class="card">
+            <div class="card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5c-1.4 0-2.5-1.1-2.5-2.5S10.6 6.5 12 6.5s2.5 1.1 2.5 2.5S13.4 11.5 12 11.5z"/></svg>
+            </div>
             <h3>巡礼路を選べます</h3>
             <p>四国八十八箇所、熊野古道、サンティアゴ巡礼路から選び、途中で別コースに切り替えることもできます。</p>
           </article>
           <article class="card">
+            <div class="card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M19 3h-4.2C14.4 1.8 13.3 1 12 1s-2.4.8-2.8 2H5c-1.1 0-2 .9-2 2v15c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.6 0 1 .4 1 1s-.4 1-1 1-1-.4-1-1 .4-1 1-1zm-1.2 14L7 13.2l1.4-1.4 2.4 2.4 5.4-5.4L17.6 10l-6.8 7z"/></svg>
+            </div>
             <h3>到達記録を残せます</h3>
             <p>通過済みのチェックポイントは実績として残り、場所の紹介をあとから見返せます。</p>
           </article>
@@ -408,33 +775,62 @@
     </section>
 
     <section id="screenshots" aria-labelledby="screenshots-title">
-      <div class="section-inner">
+      <div class="container">
+        <span class="section-eyebrow">Screenshots</span>
         <h2 id="screenshots-title">スクリーンショット</h2>
-        <div class="screenshots">
+        <div class="carousel-hint" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0L19.2 12l-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
+          <span>横にスワイプしてご覧ください</span>
+        </div>
+        <div class="carousel-wrap">
+        <div class="screenshots-carousel" id="shotsCarousel" role="region" aria-label="スクリーンショット 横スクロール">
           <figure class="screenshot-item">
-            <img src="app-store-screenshots/iphone14-main.png" alt="メイン画面">
+            <div class="shot-wrap">
+              <img src="app-store-screenshots/iphone14-main.png" alt="メイン画面"
+                   onerror="this.outerHTML='&lt;div class=&quot;shot-placeholder&quot;&gt;メイン画面&lt;br&gt;screenshot&lt;/div&gt;'">
+            </div>
             <figcaption>メイン画面</figcaption>
           </figure>
           <figure class="screenshot-item">
-            <img src="app-store-screenshots/iphone17-pro-max-main.png" alt="大きい画面でのメイン画面">
+            <div class="shot-wrap">
+              <img src="app-store-screenshots/iphone17-pro-max-main.png" alt="大きい画面でのメイン画面"
+                   onerror="this.outerHTML='&lt;div class=&quot;shot-placeholder&quot;&gt;大きい画面&lt;br&gt;screenshot&lt;/div&gt;'">
+            </div>
             <figcaption>大きい画面</figcaption>
           </figure>
           <figure class="screenshot-item">
-            <img src="app-store-screenshots/iphone17-pro-max-course-history.png" alt="コース履歴画面">
+            <div class="shot-wrap">
+              <img src="app-store-screenshots/iphone17-pro-max-course-history.png" alt="コース履歴画面"
+                   onerror="this.outerHTML='&lt;div class=&quot;shot-placeholder&quot;&gt;コース履歴&lt;br&gt;screenshot&lt;/div&gt;'">
+            </div>
             <figcaption>コース履歴</figcaption>
           </figure>
           <figure class="screenshot-item">
-            <img src="app-store-screenshots/iphone17-pro-max-checkpoint-detail.png" alt="チェックポイント詳細画面">
+            <div class="shot-wrap">
+              <img src="app-store-screenshots/iphone17-pro-max-checkpoint-detail.png" alt="チェックポイント詳細画面"
+                   onerror="this.outerHTML='&lt;div class=&quot;shot-placeholder&quot;&gt;チェックポイント詳細&lt;br&gt;screenshot&lt;/div&gt;'">
+            </div>
             <figcaption>チェックポイント詳細</figcaption>
           </figure>
+        </div>
+        <div class="carousel-controls" aria-hidden="false">
+          <button class="carousel-btn" id="shotsPrev" type="button" aria-label="前のスクリーンショット">
+            <svg viewBox="0 0 24 24"><path d="M15.4 7.4L14 6l-6 6 6 6 1.4-1.4L10.8 12z"/></svg>
+          </button>
+          <div class="carousel-dots" id="shotsDots" role="tablist" aria-label="スクリーンショット選択"></div>
+          <button class="carousel-btn" id="shotsNext" type="button" aria-label="次のスクリーンショット">
+            <svg viewBox="0 0 24 24"><path d="M8.6 16.6L13.2 12 8.6 7.4 10 6l6 6-6 6z"/></svg>
+          </button>
+        </div>
         </div>
         <p class="note">画面内容は提出前の最終ビルドで再確認します。</p>
       </div>
     </section>
 
     <section id="qa" aria-labelledby="qa-title">
-      <div class="section-inner">
-        <h2 id="qa-title">Q&amp;A</h2>
+      <div class="container">
+        <span class="section-eyebrow">FAQ</span>
+        <h2 id="qa-title">よくあるご質問</h2>
         <div class="qa-list">
           <article class="qa-item">
             <h3>実際の現在地を使いますか？</h3>
@@ -465,7 +861,8 @@
     </section>
 
     <section id="privacy" aria-labelledby="privacy-title">
-      <div class="section-inner">
+      <div class="container">
+        <span class="section-eyebrow">Privacy</span>
         <h2 id="privacy-title">プライバシーポリシー</h2>
         <p class="note">最終更新日: 2026-04-29</p>
         <div class="policy-grid">
@@ -502,23 +899,174 @@
     </section>
 
     <section id="support" aria-labelledby="support-title">
-      <div class="section-inner">
+      <div class="container">
+        <span class="section-eyebrow">Contact</span>
         <h2 id="support-title">お問い合わせ</h2>
         <div class="support-box">
           <p>不具合、表示内容の確認、コースやチェックポイント情報についてのご連絡は、下記の窓口までお願いします。</p>
-          <ul class="contact-list">
-            <li>
-              <span class="contact-label">メール</span>
-              <a href="mailto:Hiro@ozbright-tech.com">Hiro@ozbright-tech.com</a>
-            </li>
-          </ul>
+          <a class="contact-card" href="mailto:Hiro@ozbright-tech.com">
+            <span class="ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            </span>
+            <span>
+              <span class="label">メール</span>
+              <span class="value">問い合わせメール</span>
+            </span>
+          </a>
         </div>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <small>&copy; 2026 おうち巡礼 @ OzBright</small>
+    <div class="container">
+      <small>&copy; 2026 おうち巡礼 @ OzBright</small>
+    </div>
   </footer>
+
+  <!-- ───── Tweaks ───── -->
+  <div id="tweaks-root"></div>
+
+  <script>
+    // Screenshots carousel controls
+    (function () {
+      const track = document.getElementById("shotsCarousel");
+      const prev = document.getElementById("shotsPrev");
+      const next = document.getElementById("shotsNext");
+      const dotsWrap = document.getElementById("shotsDots");
+      if (!track || !prev || !next || !dotsWrap) return;
+
+      const items = Array.from(track.querySelectorAll(".screenshot-item"));
+      // Build dots
+      const dots = items.map((_, i) => {
+        const d = document.createElement("button");
+        d.type = "button";
+        d.className = "carousel-dot";
+        d.setAttribute("role", "tab");
+        d.setAttribute("aria-label", `スクリーンショット ${i + 1}`);
+        d.addEventListener("click", () => scrollToIndex(i));
+        dotsWrap.appendChild(d);
+        return d;
+      });
+
+      function itemStep() {
+        if (items.length < 2) return track.clientWidth;
+        return items[1].getBoundingClientRect().left - items[0].getBoundingClientRect().left;
+      }
+
+      function currentIndex() {
+        const step = itemStep();
+        if (!step) return 0;
+        return Math.round(track.scrollLeft / step);
+      }
+
+      function scrollToIndex(i) {
+        const step = itemStep();
+        const max = items.length - 1;
+        const target = Math.max(0, Math.min(max, i));
+        track.scrollTo({ left: target * step, behavior: "smooth" });
+      }
+
+      function update() {
+        const i = currentIndex();
+        dots.forEach((d, idx) => d.setAttribute("aria-current", idx === i ? "true" : "false"));
+        const maxScroll = track.scrollWidth - track.clientWidth - 1;
+        prev.disabled = track.scrollLeft <= 1;
+        next.disabled = track.scrollLeft >= maxScroll;
+      }
+
+      prev.addEventListener("click", () => scrollToIndex(currentIndex() - 1));
+      next.addEventListener("click", () => scrollToIndex(currentIndex() + 1));
+      track.addEventListener("scroll", () => requestAnimationFrame(update), { passive: true });
+      window.addEventListener("resize", update);
+      update();
+    })();
+  </script>
+
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel">
+    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "fontSize": "standard",
+      "accent": "shuiro",
+      "decoration": "subtle"
+    }/*EDITMODE-END*/;
+
+    const FONT_SIZES = {
+      standard: { body: "18px", small: "15px", lead: "19px" },
+      large:    { body: "20px", small: "16px", lead: "21px" },
+      xlarge:   { body: "22px", small: "17px", lead: "23px" }
+    };
+
+    const ACCENTS = {
+      shuiro:  { accent: "#b8402e", soft: "#c95a47", tint: "rgba(184, 64, 46, 0.08)" }, // 朱色
+      ai:      { accent: "#2c5a7a", soft: "#3e7596", tint: "rgba(44, 90, 122, 0.08)" }, // 藍
+      matsuba: { accent: "#3b6041", soft: "#4f7a56", tint: "rgba(59, 96, 65, 0.08)" }   // 松葉
+    };
+
+    function applyTweaks(t) {
+      const root = document.documentElement;
+      const fs = FONT_SIZES[t.fontSize] || FONT_SIZES.standard;
+      root.style.setProperty("--fs-body", fs.body);
+      root.style.setProperty("--fs-small", fs.small);
+      root.style.setProperty("--fs-lead", fs.lead);
+
+      const a = ACCENTS[t.accent] || ACCENTS.shuiro;
+      root.style.setProperty("--accent", a.accent);
+      root.style.setProperty("--accent-soft", a.soft);
+      root.style.setProperty("--accent-tint", a.tint);
+
+      root.style.setProperty("--deco", t.decoration === "off" ? "0" : "1");
+      document.body.dataset.deco = t.decoration === "off" ? "off" : "on";
+    }
+
+    // Apply once at startup so default look matches DEFAULTS
+    applyTweaks(TWEAK_DEFAULTS);
+
+    function App() {
+      const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+      React.useEffect(() => { applyTweaks(tweaks); }, [tweaks]);
+
+      return (
+        <TweaksPanel title="表示の調整">
+          <TweakSection title="文字サイズ" subtitle="読みやすい大きさに調整できます">
+            <TweakRadio
+              value={tweaks.fontSize}
+              onChange={(v) => setTweak("fontSize", v)}
+              options={[
+                { value: "standard", label: "標準" },
+                { value: "large",    label: "大" },
+                { value: "xlarge",   label: "特大" }
+              ]}
+            />
+          </TweakSection>
+
+          <TweakSection title="色味" subtitle="差し色を変更します">
+            <TweakRadio
+              value={tweaks.accent}
+              onChange={(v) => setTweak("accent", v)}
+              options={[
+                { value: "shuiro",  label: "朱色" },
+                { value: "ai",      label: "藍" },
+                { value: "matsuba", label: "松葉" }
+              ]}
+            />
+          </TweakSection>
+
+          <TweakSection title="装飾の度合い">
+            <TweakRadio
+              value={tweaks.decoration}
+              onChange={(v) => setTweak("decoration", v)}
+              options={[
+                { value: "subtle", label: "ほどほど" },
+                { value: "off",    label: "なし" }
+              ]}
+            />
+          </TweakSection>
+        </TweaksPanel>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("tweaks-root")).render(<App />);
+  </script>
 </body>
 </html>
